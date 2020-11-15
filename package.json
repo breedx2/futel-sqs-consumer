@@ -1,0 +1,19 @@
+{
+  "name": "futel-sqs-consumer",
+  "version": "1.0.0",
+  "description": "Provides easy consumption of futel SQS events",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/breedx2/futel-sqs-consumer.git"
+  },
+  "author": "breedx2",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/breedx2/futel-sqs-consumer/issues"
+  },
+  "homepage": "https://github.com/breedx2/futel-sqs-consumer#readme"
+}
