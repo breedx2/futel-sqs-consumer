@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/breedx2/futel-sqs-consumer/issues"
   },
-  "homepage": "https://github.com/breedx2/futel-sqs-consumer#readme"
+  "homepage": "https://github.com/breedx2/futel-sqs-consumer#readme",
+  "dependencies": {
+    "aws-sdk": "^2.792.0"
+  }
 }
