@@ -11,6 +11,11 @@ building of apps based on the event stream.
 
 See [app.js](src/app.js) for the full example.  
 
+You can run it like this:
+```
+node src/app.js
+```
+
 You create an instance of `FutelSqsConsumer` (use the builder),
 and tell it to just run forever.  When it gets a message, it will see if
 there are any handlers for that message and will dispatch appropriately.
