@@ -2,11 +2,8 @@
 
 const receiveParams = {
  AttributeNames: [ "SentTimestamp" ],
- // MaxNumberOfMessages: 10,
  MessageAttributeNames: [ "All" ],
- // QueueUrl: env.url,
  VisibilityTimeout: 20,
- // WaitTimeSeconds: 10
 };
 
 class FutelSqsConsumer {
