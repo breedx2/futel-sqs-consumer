@@ -6,11 +6,15 @@
 function standard(fn) {
   return {
     allPredicates: [
-      m => m.event.Event !== "Registry",
-      m => m.event.Event !== "PeerStatus"
+      unwanted("Registry"),
+      unwanted("PeerStatus")
     ],
     action: fn
   };
+}
+
+function unwanted(name){
+  return m => m.event.Event !== name;
 }
 
 module.exports = {
