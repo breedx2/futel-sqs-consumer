@@ -17,9 +17,8 @@ const deleter = new FutelMessageDeleter(sqs, env.url);
 const dispatcher = new FutelMessageDispatcher([
   {
     allPredicates: [
-      m => true,
-      // m => m.event.Event !== "Registry",
-      // m => m.event.Event !== "PeerStatus"
+      m => m.event.Event !== "Registry",
+      m => m.event.Event !== "PeerStatus"
     ],
     action: m => console.log(JSON.stringify(m, null, '\t'))
   }
