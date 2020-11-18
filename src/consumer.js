@@ -5,13 +5,13 @@ const receiveParams = {
  MessageAttributeNames: [ "All" ],
  VisibilityTimeout: 20,
 };
-
+var runCt = 0;
 class FutelSqsConsumer {
 
-  constructor(sqs, deleter, config){
+  constructor(sqs, config){
     this.sqs = sqs;
-    this.deleter = deleter;
-    this.config = config;
+    this.mapper = config.mapper;
+    this.deleter = config.deleter;
     receiveParams.QueueUrl = config.url;
     receiveParams.MaxNumberOfMessages = config.batchSize || 10;
     receiveParams.WaitTimeSeconds = config.pollDurationSeconds || 10;
@@ -22,22 +22,20 @@ class FutelSqsConsumer {
 
     this.sqs.receiveMessage(receiveParams)
       .promise()
-      .then(m => this.mapResponse(m))
+      .then(m => this.mapper.mapResponse(m))
       .then(m => this.dispatchMessages(m))
       .then(m => this.deleter.deleteMessages(m))
       .catch(err => {
           console.log("Error", err);
+      })
+      .then(_ => {
+        //TODO: This is a temp/hack/dev shim -- remove me
+        runCt = runCt + 1;
+        if( runCt < 5){
+          console.log("SCHEDULING ANOTHER RUN");
+          return setImmediate(() => this.runForever());
+        }
       });
-
-  }
-
-  mapResponse(data){
-    if (!data.Messages) {
-      return [];
-    }
-    console.log(`Got ${data.Messages.length} messages!`);
-    const self = this;
-    return data.Messages.map(msg => self.mapMessage(msg));
   }
 
   dispatchMessages(messages){
@@ -45,17 +43,6 @@ class FutelSqsConsumer {
     return messages;
   }
 
-  mapMessage(awsMsg){
-    const rawBody = awsMsg.Body
-    const body = JSON.parse(rawBody);
-    const message = JSON.parse(body.Message);
-    message.timestamp = body.Timestamp;
-    return {
-        message: message,
-        // timestamp: body.Timestamp,
-        receiptHandle: awsMsg.ReceiptHandle
-    };
-  }
 }
 
 module.exports = FutelSqsConsumer;
