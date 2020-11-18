@@ -9,7 +9,7 @@ building of apps based on the event stream.
 
 # example
 
-See [src/app.js](app.js) for the full example.  
+See [app.js](src/app.js) for the full example.  
 
 You create an instance of `FutelSqsConsumer` (use the builder),
 and tell it to just run forever.  When it gets a message, it will see if
