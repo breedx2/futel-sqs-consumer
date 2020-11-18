@@ -8,21 +8,23 @@ const receiveParams = {
 
 class FutelSqsConsumer {
 
-  constructor(sqs, config){
+  constructor(sqs, deleter, config){
     this.sqs = sqs;
+    this.deleter = deleter;
     this.config = config;
     receiveParams.QueueUrl = config.url;
     receiveParams.MaxNumberOfMessages = config.batchSize || 10;
-    receiveParams.WaitTimeSeconds = config.pollDuration || 10;
+    receiveParams.WaitTimeSeconds = config.pollDurationSeconds || 10;
   }
 
   runForever(){
+    //TODO: Actually run forever
 
     this.sqs.receiveMessage(receiveParams)
       .promise()
       .then(m => this.mapResponse(m))
       .then(m => this.dispatchMessages(m))
-      .then(m => this.deleteMessages(m))
+      .then(m => this.deleter.deleteMessages(m))
       .catch(err => {
           console.log("Error", err);
       });
@@ -43,19 +45,19 @@ class FutelSqsConsumer {
     return messages;
   }
 
-  deleteMessages(messages){
-    const self = this;
-    const promises = messages.map(msg => {
-      return self.sqs.deleteMessage({
-          QueueUrl: self.config.url,
-          ReceiptHandle: msg.receiptHandle
-        })
-        .promise()
-        // .then(res => console.log(`Deleted ${msg.receiptHandle}`))
-        .catch(err => console.log("Error deleting", err));
-      });
-    return Promise.all(promises);
-  }
+  // deleteMessages(messages){
+  //   const self = this;
+  //   const promises = messages.map(msg => {
+  //     return self.sqs.deleteMessage({
+  //         QueueUrl: self.config.url,
+  //         ReceiptHandle: msg.receiptHandle
+  //       })
+  //       .promise()
+  //       // .then(res => console.log(`Deleted ${msg.receiptHandle}`))
+  //       .catch(err => console.log("Error deleting", err));
+  //     });
+  //   return Promise.all(promises);
+  // }
 
   mapMessage(awsMsg){
     const rawBody = awsMsg.Body
