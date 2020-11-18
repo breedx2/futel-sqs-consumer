@@ -1,7 +1,6 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-const env = require('../env.json');
 const FutelSqsConsumer = require('./consumer');
 const FutelMessageDeleter = require('./deleter');
 const FutelSqsResponseMapper = require('./mapper');
@@ -51,7 +50,7 @@ class FutelConsumerBuilder {
     const dispatcher = new FutelMessageDispatcher(this.predicatedHandlers);
 
     const config = {
-      url: env.url,
+      url: this.queueUrl,
       batchSize: this.batchSize,
       pollDurationSeconds: this.pollDurationSeconds,
       mapper: mapper,
