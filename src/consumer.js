@@ -6,6 +6,9 @@ const receiveParams = {
  VisibilityTimeout: 20,
 };
 
+// Reads batches from SQS, transforms the responses into something
+// more usable, dispatches them to a delegate processor,
+// and then deletes them from the queue.
 class FutelSqsConsumer {
 
   constructor(sqs, config){

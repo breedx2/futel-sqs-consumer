@@ -1,5 +1,7 @@
 'use strict';
 
+// Checks messages against a collection of predicates and conditionally
+// calls a function when the predicates pass.
 class FutelMessageDispatcher {
 
   constructor(sinks){
