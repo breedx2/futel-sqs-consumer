@@ -6,6 +6,7 @@ const FutelSqsConsumer = require('./consumer.js');
 const FutelMessageDeleter = require('./deleter.js');
 const FutelSqsResponseMapper = require('./mapper.js');
 const FutelMessageDispatcher = require('./dispatcher.js');
+const pred = require('./predicates');
 
 AWS.config.update({region: env.region});
 AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: env.profile});
@@ -15,13 +16,7 @@ const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 const mapper = new FutelSqsResponseMapper();
 const deleter = new FutelMessageDeleter(sqs, env.url);
 const dispatcher = new FutelMessageDispatcher([
-  {
-    allPredicates: [
-      m => m.event.Event !== "Registry",
-      m => m.event.Event !== "PeerStatus"
-    ],
-    action: m => console.log(JSON.stringify(m, null, '\t'))
-  }
+  pred.standard(m => console.log(JSON.stringify(m, null, '\t')))
 ]);
 
 const config = {
