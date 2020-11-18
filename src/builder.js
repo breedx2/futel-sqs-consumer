@@ -2,10 +2,10 @@
 
 const AWS = require('aws-sdk');
 const env = require('../env.json');
-const FutelSqsConsumer = require('./consumer.js');
-const FutelMessageDeleter = require('./deleter.js');
-const FutelSqsResponseMapper = require('./mapper.js');
-const FutelMessageDispatcher = require('./dispatcher.js');
+const FutelSqsConsumer = require('./consumer');
+const FutelMessageDeleter = require('./deleter');
+const FutelSqsResponseMapper = require('./mapper');
+const FutelMessageDispatcher = require('./dispatcher');
 
 class FutelConsumerBuilder {
 
