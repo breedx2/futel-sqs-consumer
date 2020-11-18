@@ -1,12 +1,14 @@
 'use strict';
 
+// Converts the more complicated sqs response data into something
+// a bit more manageable.
 class FutelSqsResponseMapper {
 
   mapResponse(data){
     if (!data.Messages) {
       return [];
     }
-    console.log(`Got ${data.Messages.length} messages!`);
+    console.log(`Received ${data.Messages.length} messages from sqs.`);
     const self = this;
     return data.Messages.map(msg => self._mapMessage(msg));
   }
