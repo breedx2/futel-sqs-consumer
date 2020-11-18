@@ -1,32 +1,21 @@
 'use strict';
 
-const AWS = require('aws-sdk');
 const env = require('../env.json');
-const FutelSqsConsumer = require('./consumer.js');
-const FutelMessageDeleter = require('./deleter.js');
-const FutelSqsResponseMapper = require('./mapper.js');
-const FutelMessageDispatcher = require('./dispatcher.js');
 const pred = require('./predicates');
+const FutelConsumerBuilder = require('./builder');
 
-AWS.config.update({region: env.region});
-AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: env.profile});
+function simpleHandler(m) {
+  console.log(JSON.stringify(m, null, '\t'));
+}
+const standardHandler = pred.standard(simpleHandler);
 
-const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+const consumer = new FutelConsumerBuilder()
+  .withRegion(env.region)
+  .withAwsProfile(env.profile)
+  .withQueueUrl(env.url)
+  .withBatchSize(10)
+  .withPollDurationSeconds(10)
+  .addHandler(standardHandler)
+  .build();
 
-const mapper = new FutelSqsResponseMapper();
-const deleter = new FutelMessageDeleter(sqs, env.url);
-const dispatcher = new FutelMessageDispatcher([
-  pred.standard(m => console.log(JSON.stringify(m, null, '\t')))
-]);
-
-const config = {
-  url: env.url,
-  batchSize: 10,
-  pollDurationSeconds: 10,
-  mapper: mapper,
-  dispatcher: dispatcher,
-  deleter: deleter,
-};
-
-const consumer = new FutelSqsConsumer(sqs, config);
 consumer.runForever();
